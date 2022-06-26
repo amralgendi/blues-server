@@ -144,9 +144,7 @@ const forgotPasswordController = async (req: Request, res: Response) => {
             },
         })
     const token = generateToken(user)
-    const url = `${req.protocol}://${req.get('host')}/reset-password/${
-        user.id
-    }/${token}`
+    const url = `${process.env.CLIENT_HOST}/reset-password/${user.id}/${token}`
     await sendPasswordResetLink(user.email, url)
     return res.status(200).json({
         success: true,
