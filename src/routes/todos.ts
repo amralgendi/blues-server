@@ -125,8 +125,8 @@ router.patch('/:id', checkAuth, checkVerified, async (req, res) => {
         {
             title,
             description,
-            priority,
-            status,
+            priority: +priorityEnum[priority],
+            status: +statusEnum[status],
             startDate,
             endDate,
         },
