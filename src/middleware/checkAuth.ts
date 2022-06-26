@@ -27,6 +27,8 @@ const checkAuth = (req: Request, res: Response, next: NextFunction) => {
         res.locals['user'] = decodedToken
         next()
     } catch (err) {
+        console.log(err)
+
         return res.status(400).json({
             success: false,
             errors: {
