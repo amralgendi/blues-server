@@ -91,5 +91,48 @@ router.delete('/:id', checkAuth, checkVerified, async (req, res) => {
         message: 'deleted',
     })
 })
+router.patch('/:id', checkAuth, checkVerified, async (req, res) => {
+    const { id } = req.params
+    const { title, description, priority, status, startDate, endDate } =
+        req.body
+    const user = res.locals['user']
+    const { valid, errors } = validateTodoCreation(
+        title,
+        description,
+        priority,
+        status,
+        startDate,
+        endDate
+    )
+    if (!valid) return res.status(400).json({ success: false, errors })
+    const todo = (await Todo.findById(id)) as ITodo
+    if (!todo)
+        return res.status(400).json({
+            success: false,
+            errors: {
+                general: 'Todo Not Found',
+            },
+        })
+    if (todo.user != user.id)
+        return res.status(401).json({
+            success: false,
+            errors: {
+                accessibility: 'Not accessible',
+            },
+        })
+    const result = await Todo.findByIdAndUpdate(
+        id,
+        {
+            title,
+            description,
+            priority,
+            status,
+            startDate,
+            endDate,
+        },
+        { new: true }
+    )
+    return res.status(200).json({ success: true, data: result })
+})
 
 export default router
