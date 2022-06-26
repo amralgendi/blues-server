@@ -32,7 +32,7 @@ const registerController = async (req: Request, res: Response) => {
     const hashedPassword = await createHashedPassword(password)
     const newUser = new User({ email, password: hashedPassword })
     const result = await newUser.save()
-    const token = generateToken(result)
+    const token = generateToken(result, undefined)
 
     res.status(200).json({
         success: true,
@@ -66,7 +66,7 @@ const signinController = async (req: Request, res: Response) => {
             },
         })
     if (!user.verified) await createEmailVerificationCode(user)
-    const token = generateToken(user)
+    const token = generateToken(user, undefined)
     return res.status(200).json({
         success: true,
         data: {
@@ -110,7 +110,7 @@ const verifyCodeController = async (req: Request, res: Response) => {
         { verified: true },
         { new: true }
     )) as IUser
-    const token = generateToken(user)
+    const token = generateToken(user, undefined)
 
     await UserVerification.findByIdAndDelete(userVerification.id)
     return res.status(200).json({
@@ -144,7 +144,7 @@ const forgotPasswordController = async (req: Request, res: Response) => {
                 email: 'Email does not exist',
             },
         })
-    const token = generateToken(user)
+    const token = generateToken(user, '15m')
     const url = `${process.env.CLIENT_HOST}/reset-password/${user.id}/${token}`
     await sendPasswordResetLink(user.email, url)
     return res.status(200).json({

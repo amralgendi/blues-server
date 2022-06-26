@@ -7,7 +7,8 @@ interface encodedToken {
     verified: boolean
 }
 
-const generateToken = (user: IUser): string => {
+const generateToken = (user: IUser, expiry: undefined | string): string => {
+    
     const token = jwt.sign(
         {
             id: user.id,
@@ -16,7 +17,7 @@ const generateToken = (user: IUser): string => {
         } as encodedToken,
         process.env.SECRET_TOKEN as jwt.Secret,
         {
-            expiresIn: '1h',
+            expiresIn: expiry,
         }
     )
     return token
