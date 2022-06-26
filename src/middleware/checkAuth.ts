@@ -38,7 +38,7 @@ const checkAuth = (req: Request, res: Response, next: NextFunction) => {
 const checkVerified = (req: Request, res: Response, next: NextFunction) => {
     const { verified } = res.locals['user']
     if (!verified)
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             errors: {
                 verified: 'User not Verified',
