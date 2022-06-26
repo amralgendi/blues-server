@@ -52,7 +52,7 @@ const signinController = async (req: Request, res: Response) => {
     const user = (await User.findOne({ email })) as IUser
 
     if (!user)
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             errors: { email: 'Email does not exists' },
         })
@@ -65,8 +65,9 @@ const signinController = async (req: Request, res: Response) => {
                 password: 'Invalid Password',
             },
         })
+    if (!user.verified) await createEmailVerificationCode(user)
     const token = generateToken(user)
-    res.status(200).json({
+    return res.status(200).json({
         success: true,
         data: {
             id: user.id,
