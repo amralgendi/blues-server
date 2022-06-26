@@ -23,7 +23,7 @@ mongoose
         console.log('DB connected')
         sendTestMail().then(() => {
             console.log('Email Sender works!')
-            app.listen(5000, () => {
+            app.listen(process.env.PORT || 5000, () => {
                 console.log('Connected')
             })
         })
